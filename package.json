@@ -1,0 +1,10 @@
+{
+  "name": "language-ansible",
+  "version": "0.0.1",
+  "description": "Simple ansible syntax package",
+  "repository": "https://github.com/atom/language-ansible",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  }
+}
