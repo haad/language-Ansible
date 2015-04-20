@@ -1,6 +1,6 @@
 {
   "name": "language-ansible",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Simple ansible syntax package",
   "repository": "https://github.com/haad/language-Ansible",
   "license": "MIT",
