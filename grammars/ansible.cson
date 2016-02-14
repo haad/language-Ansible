@@ -1,4 +1,4 @@
-fileTypes: []
+fileTypes: ['yml']
 name: "Ansible"
 patterns: [
   {
@@ -29,7 +29,7 @@ patterns: [
       "2":
         name: "text"
     contentName: "string.other.ansible"
-    end: "\\\"?\\s"
+    end: "(\\\"?[,\"=\\n])"
     name: "variable.complex.ansible"
     patterns: [
       {
@@ -45,8 +45,9 @@ patterns: [
     captures:
       "2":
         name: "variable.parameter.ansible"
-    match: "^(\\[[0-9a-zA-Z_-]+(((\\:)children)*)\\])"
+    match: "^(\\[[0-9a-zA-Z_,=-]+(((\\:)children)*)\\])"
     name: "string.quoted.double.ansible"
   }
 ]
-scopeName: "source.ansible"
+scopeName: "source.yaml.ansible"
+
