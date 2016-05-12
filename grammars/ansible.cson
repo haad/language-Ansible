@@ -49,5 +49,5 @@ patterns: [
     name: "string.quoted.double.ansible"
   }
 ]
-scopeName: "source.yaml.ansible"
+scopeName: "source.ansible"
 
