@@ -17,9 +17,25 @@ patterns: [
   {
     captures:
       "2":
+        name: "keyword.other.ansible"
+      "3":
         name: "string.quoted.double.ansible"
-    match: "\\- (name\\:|include\\:) (.*)|(^(- |\\s*)\\w+\\ *:)"
-    name: "keyword.other.ansible"
+    match: "(\\-) (name\\:|include\\:) (.*)"
+    name: "text"
+  }
+  {
+    captures:
+      "2":
+        name: "keyword.other.ansible"
+    match: "^(- |\\s*(\\w+\\ *:))"
+    name: "text"
+  }
+  {
+    captures:
+      "2":
+        name: "keyword.other.ansible"
+    match: "(- |\\s*(\\w+\\ *:))"
+    name: "text"
   }
   {
     begin: "- {"
