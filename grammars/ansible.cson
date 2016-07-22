@@ -11,6 +11,13 @@ patterns: [
     name: "comment.line.number-sign.ansible"
   }
   {
+    captures:
+      "2":
+        name: "variable.parameter.ansible"
+    match: "^(\\[[0-9a-zA-Z_,=-]+(((\\:)children)*)\\])"
+    name: "string.quoted.double.ansible"
+  }
+  {
     match: "(\\{\\{ *[^\\{\\}]+ *\\}\\})|(\\$\\{[^\\{\\}]+\\})"
     name: "storage.type.ansible"
   }
@@ -27,7 +34,7 @@ patterns: [
     captures:
       "2":
         name: "keyword.other.ansible"
-    match: "(^)?(- |\\s*(\\w+\\ *:))"
+    match: "(\\s*(\\w+:))?\\s"
     name: "text"
   }
   {
@@ -42,7 +49,7 @@ patterns: [
     name: "text"
     patterns: [
         {
-          match: "(role\\:)|(tags\\:)|(when\\:)|(\\w+:)"
+          match: "(role\\:)|(tags\\:)|(when\\:)|(\\S+:)?"
           name: "keyword.other.ansible"
         }
     ]
@@ -65,13 +72,6 @@ patterns: [
         name: "text"
       }
     ]
-  }
-  {
-    captures:
-      "2":
-        name: "variable.parameter.ansible"
-    match: "^(\\[[0-9a-zA-Z_,=-]+(((\\:)children)*)\\])"
-    name: "string.quoted.double.ansible"
   }
 ]
 scopeName: "source.ansible"
