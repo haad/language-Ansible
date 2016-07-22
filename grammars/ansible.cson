@@ -27,14 +27,7 @@ patterns: [
     captures:
       "2":
         name: "keyword.other.ansible"
-    match: "^(- |\\s*(\\w+\\ *:))"
-    name: "text"
-  }
-  {
-    captures:
-      "2":
-        name: "keyword.other.ansible"
-    match: "(- |\\s*(\\w+\\ *:))"
+    match: "(^)?(- |\\s*(\\w+\\ *:))"
     name: "text"
   }
   {
@@ -60,17 +53,16 @@ patterns: [
       "1":
         name: "entity.other.attribute-name.ansible"
       "2":
-        name: "text"
-    contentName: "string.other.ansible"
-    end: "(\\\"?[,\"=\\n])"
-    name: "variable.complex.ansible"
+        name: "string.quoted.double.ansible"
+    contentName: "constant.other.ansible"
+    end: "(\\\"?[,\"=\\n ])"
     patterns: [
       {
         include: "$self"
       }
       {
         match: "."
-        name: "constant.other.ansible"
+        name: "text"
       }
     ]
   }
