@@ -1,4 +1,4 @@
-# Ansible Syntax Highligting Package
+# Ansible Syntax Highlighting Package
 
 This extension to enable syntax highlighting for Ansible in the Atom Editor.
 It's based on the [original Ansible Sublime-text package](https://github.com/clifford-github/sublime-ansible) with my own fixes.
