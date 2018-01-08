@@ -1,7 +1,12 @@
 # Ansible Syntax Highlighting Package
 
-This extension to enable syntax highlighting for Ansible in the Atom Editor.
-It's based on the [original Ansible Sublime-text package](https://github.com/clifford-github/sublime-ansible) with my own fixes.
+This extension add 2 grammars to enable syntax highlighting for Ansible in the Atom Editor.
+
+- `Ansible`: It's based on the [original Ansible Sublime-text package](https://github.com/clifford-github/sublime-ansible) with my own fixes.
+- `Ansible (advanced)` : It's based on YAML language of 2015 FichteFoll <fichtefoll2@googlemail.com> with modifications to support :
+    - Jinja language
+    - Jinja expressions for ansible conditions (`when`, `changed_when`, `failed_when`, `check_mode`)
+    - Some YAML block scalar
 
 
 ## Adding ansible yaml file detection
@@ -35,4 +40,3 @@ Manually defining custom file types.
         "yml"
       ]
 ```
-
