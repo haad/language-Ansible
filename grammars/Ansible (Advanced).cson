@@ -1,0 +1,813 @@
+name: "Ansible (advanced)"
+scopeName: "source.ansible-advanced"
+fileTypes: []
+uuid: "99ac36b1-d3e8-44f3-9933-3d36a95e87ff"
+patterns: [
+  {
+    include: "#comment"
+  }
+  {
+    include: "#property"
+  }
+  {
+    include: "#directive"
+  }
+  {
+    name: "entity.other.document.begin.ansible-advanced"
+    match: "^---"
+  }
+  {
+    name: "entity.other.document.end.ansible-advanced"
+    match: "^\\.{3}"
+  }
+  {
+    include: "#conditions"
+  }
+  {
+    include: "#node"
+  }
+]
+repository:
+  comment:
+    begin: "(?:(^[ \\t]*)|[ \\t]+)(?=#\\p{Print}*$)"
+    beginCaptures:
+      "1":
+        name: "punctuation.whitespace.comment.leading.ansible-advanced"
+    end: "(?!\\G)"
+    patterns: [
+      {
+        name: "comment.line.number-sign.ansible-advanced"
+        begin: "#"
+        beginCaptures:
+          "0":
+            name: "punctuation.definition.comment.ansible-advanced"
+        end: "\\n"
+      }
+    ]
+  property:
+    name: "meta.property.ansible-advanced"
+    begin: "(?=!|&)"
+    end: "(?!\\G)"
+    patterns: [
+      {
+        match: "\\G((&))([^\\s\\[\\]/{/},]+)(\\S+)?"
+        captures:
+          "1":
+            name: "keyword.control.property.anchor.ansible-advanced"
+          "2":
+            name: "punctuation.definition.anchor.ansible-advanced"
+          "3":
+            name: "entity.name.type.anchor.ansible-advanced"
+          "4":
+            name: "invalid.illegal.character.anchor.ansible-advanced"
+      }
+      {
+        name: "storage.type.tag-handle.ansible-advanced"
+        match: '''
+          (?x) \\G (?:
+              ! < (?: %\\p{XDigit}{2} | [0-9A-Za-z\\-#;/?:@&=+$,_.!~*'()\\[\\]] )+ >
+            | (?:!(?:[0-9A-Za-z\\-]*!)?) (?: %\\p{XDigit}{2} | [0-9A-Za-z\\-#;/?:@&=+$_.~*'()] )+
+            | !
+          ) (?=\\ |\\t|$)
+        '''
+      }
+      {
+        name: "invalid.illegal.tag-handle.ansible-advanced"
+        match: "\\S+"
+      }
+    ]
+  directive:
+    name: "meta.directive.ansible-advanced"
+    begin: "^%"
+    beginCaptures:
+      "0":
+        name: "punctuation.definition.directive.begin.ansible-advanced"
+    end: "(?=$|[ \\t]+($|#))"
+    patterns: [
+      {
+        match: "\\G(YAML)[ \\t]+(\\d+\\.\\d+)"
+        captures:
+          "1":
+            name: "keyword.other.directive.ansible-advanced.ansible-advanced"
+          "2":
+            name: "constant.numeric.ansible-advanced-version.ansible-advanced"
+      }
+      {
+        match: '''
+          (?x) \\G (TAG) (?:[ \\t]+
+              ((?:!(?:[0-9A-Za-z\\-]*!)?))
+              (?:[ \\t]+ (
+                    !              (?x: %\\p{XDigit}{2} | [0-9A-Za-z\\-#;/?:@&=+$,_.!~*'()\\[\\]] )*
+                  | (?![,!\\[\\]{}]) (?x: %\\p{XDigit}{2} | [0-9A-Za-z\\-#;/?:@&=+$,_.!~*'()\\[\\]] )+
+                  )
+              )?
+          )?
+        '''
+        captures:
+          "1":
+            name: "keyword.other.directive.tag.ansible-advanced"
+          "2":
+            name: "storage.type.tag-handle.ansible-advanced"
+          "3":
+            name: "support.type.tag-prefix.ansible-advanced"
+      }
+      {
+        match: "(?x) \\G (\\w+) (?:[ \\t]+ (\\w+) (?:[ \\t]+ (\\w+))? )?"
+        captures:
+          "1":
+            name: "support.other.directive.reserved.ansible-advanced"
+          "2":
+            name: "string.unquoted.directive-name.ansible-advanced"
+          "3":
+            name: "string.unquoted.directive-parameter.ansible-advanced"
+      }
+      {
+        name: "invalid.illegal.unrecognized.ansible-advanced"
+        match: "\\S+"
+      }
+    ]
+  node:
+    patterns: [
+      {
+        include: "#block-node"
+      }
+    ]
+  "block-node":
+    patterns: [
+      {
+        include: "#prototype"
+      }
+      {
+        include: "#block-scalar"
+      }
+      {
+        include: "#block-collection"
+      }
+      {
+        include: "#flow-scalar-plain-out"
+      }
+      {
+        include: "#flow-node"
+      }
+    ]
+  prototype:
+    patterns: [
+      {
+        include: "#comment"
+      }
+      {
+        include: "#property"
+      }
+    ]
+  "block-scalar":
+    begin: "(\\s*)(?:(?:-\\s+)?(\\S+):\\s+|-\\s+)(?:(\\|)|(>))([1-9])?([-+])?(.*\\n?)"
+    contentName: "string.unquoted.block.ansible-advanced"
+    beginCaptures:
+      "2":
+        name: "keyword.ansible-advanced"
+      "3":
+        name: "punctuation.definition.block.scalar.literal.ansible-advanced"
+      "4":
+        name: "punctuation.definition.block.scalar.folded.ansible-advanced"
+      "5":
+        name: "constant.numeric.indentation-indicator.ansible-advanced"
+      "6":
+        name: "support.other.chomping-indicator.ansible-advanced"
+      "7":
+        patterns: [
+          {
+            include: "#comment"
+          }
+          {
+            name: "invalid.illegal.expected-comment-or-newline.ansible-advanced"
+            match: ".+"
+          }
+        ]
+    patterns: [
+      {
+        include: "source.jinja"
+      }
+    ]
+    end: "^(?!\\1\\s+\\S|$)"
+  "block-collection":
+    patterns: [
+      {
+        include: "#block-sequence"
+      }
+      {
+        include: "#block-mapping"
+      }
+    ]
+  "block-sequence":
+    name: "punctuation.definition.block.sequence.item.ansible-advanced"
+    match: "(-)( |\\t|$)"
+  "block-mapping":
+    patterns: [
+      {
+        include: "#block-pair"
+      }
+    ]
+  "flow-scalar-plain-out":
+    patterns: [
+      {
+        include: "#flow-scalar-plain-out-implicit-type"
+      }
+      {
+        name: "string.unquoted.plain.out.ansible-advanced"
+        begin: '''
+          (?x)
+            (?=[^\\s[-?:,\\[\\]{}#&*!|>'"%@`]])
+          | [?:-] (?=\\S)
+        '''
+        end: '''
+          (?x)
+          (?=
+                \\s* $
+              | \\s+ \\#
+              | \\s* : (\\s|$)
+          )
+        '''
+        patterns: [
+          {
+            include: "#specials"
+          }
+        ]
+      }
+    ]
+  specials:
+    patterns: [
+      {
+        include: "source.jinja"
+      }
+      {
+        match: "([\\w-]+?)="
+        captures:
+          "1":
+            name: "entity.other.attribute-name.ansible-advanced-advence"
+      }
+    ]
+  conditions:
+    patterns: [
+      {
+        begin: "\\b((?:changed_|failed_)?when|check_mode)\\b\\s*:(?! [|>]|\\s*$)(\\s+[\"'])?"
+        end: "(?:[\"'])?$"
+        beginCaptures:
+          "1":
+            name: "keyword.other.special-method.ansible-advanced"
+        patterns: [
+          {
+            include: "source.jinja#expression"
+          }
+        ]
+      }
+      {
+        begin: "(\\s*)(?:(?:-\\s+)?((?:changed_|failed_)?when|check_mode):\\s+|-\\s+)(?:(\\|)|(>))([1-9])?([-+])?(.*\\n?)"
+        contentName: "string.unquoted.block.ansible-advanced"
+        beginCaptures:
+          "2":
+            name: "keyword.other.special-method.ansible-advanced"
+          "3":
+            name: "punctuation.definition.block.scalar.literal.ansible-advanced"
+          "4":
+            name: "punctuation.definition.block.scalar.folded.ansible-advanced"
+          "5":
+            name: "constant.numeric.indentation-indicator.ansible-advanced"
+          "6":
+            name: "support.other.chomping-indicator.ansible-advanced"
+          "7":
+            patterns: [
+              {
+                include: "#comment"
+              }
+              {
+                name: "invalid.illegal.expected-comment-or-newline.ansible-advanced"
+                match: ".+"
+              }
+            ]
+        patterns: [
+          {
+            include: "source.jinja#expression"
+          }
+        ]
+        end: "^(?!\\1\\s+\\S|$)"
+      }
+      {
+        begin: "^(\\s*)(?:(?:-\\s+)?((?:changed_|failed_)?when|check_mode)):$"
+        beginCaptures:
+          "2":
+            name: "keyword.other.special-method.ansible-advanced"
+        end: "^(?!\\1\\s+-\\s+\\S|$)"
+        patterns: [
+          {
+            begin: "(?:[\"'])(.*)(?=[\"']\\s*?$)"
+            beginCaptures:
+              "1":
+                patterns: [
+                  {
+                    include: "source.jinja#expression"
+                  }
+                ]
+            end: "$"
+          }
+          {
+            include: "source.jinja#expression"
+          }
+        ]
+      }
+    ]
+  "flow-node":
+    patterns: [
+      {
+        include: "#prototype"
+      }
+      {
+        include: "#flow-alias"
+      }
+      {
+        include: "#flow-collection"
+      }
+      {
+        include: "#flow-scalar"
+      }
+    ]
+  "flow-alias":
+    match: "((\\*))([^\\s\\[\\]/{/},]+)([^\\s\\]},]\\S*)?"
+    captures:
+      "1":
+        name: "keyword.control.flow.alias.ansible-advanced"
+      "2":
+        name: "punctuation.definition.alias.ansible-advanced"
+      "3":
+        name: "keyword.other.alias.ansible-advanced"
+      "4":
+        name: "invalid.illegal.character.anchor.ansible-advanced"
+  "flow-collection":
+    patterns: [
+      {
+        include: "#flow-sequence"
+      }
+      {
+        include: "#flow-mapping"
+      }
+    ]
+  "flow-sequence":
+    name: "meta.flow-sequence.ansible-advanced"
+    begin: "\\["
+    beginCaptures:
+      "0":
+        name: "punctuation.definition.sequence.begin.ansible-advanced"
+    end: "\\]"
+    endCaptures:
+      "0":
+        name: "punctuation.definition.sequence.end.ansible-advanced"
+    patterns: [
+      {
+        include: "#prototype"
+      }
+      {
+        name: "punctuation.separator.sequence.ansible-advanced"
+        match: ","
+      }
+      {
+        include: "#flow-pair"
+      }
+      {
+        include: "#flow-node"
+      }
+    ]
+  "block-pair":
+    patterns: [
+      {
+        name: "meta.block-mapping.ansible-advanced"
+        begin: "\\?"
+        beginCaptures:
+          "1":
+            name: "punctuation.definition.key-value.begin.ansible-advanced"
+        end: "(?=\\?)|^ *(:)|(:)"
+        endCaptures:
+          "1":
+            name: "punctuation.separator.key-value.mapping.ansible-advanced"
+          "2":
+            name: "invalid.illegal.expected-newline.ansible-advanced"
+        patterns: [
+          {
+            include: "#block-node"
+          }
+        ]
+      }
+      {
+        begin: '''
+          (?x)
+          (?=
+            (?x:
+                [^\\s[-?:,\\[\\]{}#>*!|&'"%@`]]
+              | [?:-] \\S
+            )
+            (
+                [^\\s:]
+              | : \\S
+              | \\s+ (?![#\\s])
+            )*
+            \\s*
+            :
+            (\\s|$)
+          )
+        '''
+        end: '''
+          (?x)
+          (?=
+              \\s* $
+            | \\s+ \\#
+            | \\s* : (\\s|$)
+          )
+        '''
+        patterns: [
+          {
+            include: "#flow-scalar-plain-out-implicit-type"
+          }
+          {
+            name: "string.unquoted.plain.out.ansible-advanced"
+            contentName: "keyword.other.ansible-advanced"
+            begin: '''
+              (?x)
+                [^\\s[-?:,\\[\\]{}#&*!|>'"%@`]]
+              | [?:-] (?=\\S)
+            '''
+            beginCaptures:
+              "0":
+                name: "keyword.other.ansible-advanced"
+            end: '''
+              (?x)
+              (?=
+                  \\s* $
+                | \\s+ \\#
+                | \\s* : (\\s|$)
+              )
+            '''
+          }
+        ]
+      }
+      {
+        name: "punctuation.separator.key-value.mapping.ansible-advanced"
+        match: ":(?=\\s|$)"
+      }
+    ]
+  "flow-mapping":
+    name: "meta.flow-mapping.ansible-advanced"
+    begin: "\\{"
+    beginCaptures:
+      "0":
+        name: "punctuation.definition.mapping.begin.ansible-advanced"
+    end: "\\}"
+    endCaptures:
+      "0":
+        name: "punctuation.definition.mapping.end.ansible-advanced"
+    patterns: [
+      {
+        include: "#prototype"
+      }
+      {
+        name: "punctuation.separator.mapping.ansible-advanced"
+        match: ","
+      }
+      {
+        include: "#flow-pair"
+      }
+    ]
+  "flow-pair":
+    patterns: [
+      {
+        name: "meta.flow-pair.explicit.ansible-advanced"
+        begin: "\\?"
+        beginCaptures:
+          "0":
+            name: "punctuation.definition.key-value.begin.ansible-advanced"
+        end: "(?=[},\\]])"
+        patterns: [
+          {
+            include: "#prototype"
+          }
+          {
+            include: "#flow-pair"
+          }
+          {
+            include: "#flow-node"
+          }
+          {
+            begin: ":(?=\\s|$|[\\[\\]{},])"
+            beginCaptures:
+              "0":
+                name: "punctuation.separator.key-value.mapping.ansible-advanced"
+            end: "(?=[},\\]])"
+            patterns: [
+              {
+                include: "#flow-value"
+              }
+            ]
+          }
+        ]
+      }
+      {
+        name: "meta.flow-pair.key.ansible-advanced"
+        begin: '''
+          (?x)
+          (?=
+            (?x:
+                  [^\\s[-?:,\\[\\]{}#&*!|>'"%@`]]
+                | [?:-] \\S
+            )
+            (
+                  [^\\s:]
+                | : \\S
+                | \\s+ (?![#\\s])
+            )*
+            \\s*
+            :
+            (\\s|$)
+          )
+        '''
+        end: '''
+          (?x)
+          (?=
+                \\s* $
+              | \\s+ \\#
+              | \\s* : (\\s|$)
+          )
+        '''
+        patterns: [
+          {
+            include: "#flow-scalar-plain-in-implicit-type"
+          }
+          {
+            name: "string.unquoted.plain.in.ansible-advanced"
+            contentName: "keyword.other.ansible-advanced"
+            begin: '''
+              (?x)
+                [^\\s[-?:,\\[\\]{}#&*!|>'"%@`]]
+              | [?:-] [^\\s[\\[\\]{},]]
+            '''
+            beginCaptures:
+              "0":
+                name: "keyword.other.ansible-advanced"
+            end: '''
+              (?x) (?=
+                  \\s* $
+                | \\s+ \\#
+                | \\s* : (\\s|$)
+                | \\s* : [\\[\\]{},]
+                | \\s* [\\[\\]{},]
+              )
+            '''
+          }
+        ]
+      }
+      {
+        include: "#flow-node"
+      }
+      {
+        name: "meta.flow-pair.ansible-advanced"
+        begin: ":(?=\\s|$|[\\[\\]{},])"
+        end: "(?=[},\\]])"
+        captures:
+          "0":
+            name: "punctuation.separator.key-value.mapping.ansible-advanced"
+        patterns: [
+          {
+            include: "#flow-value"
+          }
+        ]
+      }
+    ]
+  "flow-scalar":
+    patterns: [
+      {
+        include: "#flow-scalar-double-quoted"
+      }
+      {
+        include: "#flow-scalar-single-quoted"
+      }
+      {
+        include: "#flow-scalar-plain-in"
+      }
+    ]
+  "flow-scalar-double-quoted":
+    name: "string.quoted.double.ansible-advanced"
+    begin: "\""
+    beginCaptures:
+      "0":
+        name: "punctuation.definition.string.begin.ansible-advanced"
+    end: "\""
+    endCaptures:
+      "0":
+        name: "punctuation.definition.string.end.ansible-advanced"
+    patterns: [
+      {
+        name: "constant.character.escape.ansible-advanced"
+        match: "\\\\([0abtnvfre \"/\\\\N_Lp]|x\\d\\d|u\\d{4}|U\\d{8})"
+      }
+      {
+        name: "constant.character.escape.double-quoted.newline.ansible-advanced"
+        match: "\\\\\\n"
+      }
+      {
+        include: "#specials"
+      }
+    ]
+  "flow-scalar-single-quoted":
+    name: "string.quoted.single.ansible-advanced"
+    begin: "'"
+    beginCaptures:
+      "0":
+        name: "punctuation.definition.string.begin.ansible-advanced"
+    end: "'(?!')"
+    endCaptures:
+      "0":
+        name: "punctuation.definition.string.end.ansible-advanced"
+    patterns: [
+      {
+        name: "constant.character.escape.single-quoted.ansible-advanced"
+        match: "''"
+      }
+      {
+        include: "#specials"
+      }
+    ]
+  "flow-scalar-plain-in":
+    patterns: [
+      {
+        include: "#flow-scalar-plain-in-implicit-type"
+      }
+      {
+        name: "string.unquoted.plain.in.ansible-advanced"
+        begin: '''
+          (?x)
+            [^\\s[-?:,\\[\\]{}#&*!|>'"%@`]]
+          | [?:-] [^\\s[\\[\\]{},]]
+        '''
+        end: '''
+          (?x)
+          (?=
+              \\s* $
+            | \\s+ \\#
+            | \\s* : (\\s|$)
+            | \\s* : [\\[\\]{},]
+            | \\s* [\\[\\]{},]
+          )
+        '''
+      }
+    ]
+  "flow-scalar-plain-in-implicit-type":
+    patterns: [
+      {
+        match: '''
+          (?x)
+          (?x:
+              (null|Null|NULL|~)
+            | (y|Y|yes|Yes|YES|n|N|no|No|NO|true|True|TRUE|false|False|FALSE|on|On|ON|off|Off|OFF)
+            | (
+                (?:
+                    [-+]? 0b [0-1_]+ # (base 2)
+                  | [-+]? 0  [0-7_]+ # (base 8)
+                  | [-+]? (?: 0|[1-9][0-9_]*) # (base 10)
+                  | [-+]? 0x [0-9a-fA-F_]+ # (base 16)
+                  | [-+]? [1-9] [0-9_]* (?: :[0-5]?[0-9])+ # (base 60)
+                )
+              )
+            | (
+                (?x:
+                    [-+]? (?: [0-9] [0-9_]*)? \\. [0-9.]* (?: [eE] [-+] [0-9]+)? # (base 10)
+                  | [-+]? [0-9] [0-9_]* (?: :[0-5]?[0-9])+ \\. [0-9_]* # (base 60)
+                  | [-+]? \\. (?: inf|Inf|INF) # (infinity)
+                  |       \\. (?: nan|NaN|NAN) # (not a number)
+                )
+              )
+            | (
+                (?x:
+                    \\d{4} - \\d{2} - \\d{2}           # (y-m-d)
+                  | \\d{4}                           # (year)
+                    - \\d{1,2}                       # (month)
+                    - \\d{1,2}                       # (day)
+                    (?: [Tt] | [ \\t]+) \\d{1,2}      # (hour)
+                    : \\d{2}                         # (minute)
+                    : \\d{2}                         # (second)
+                    (?: \\.\\d*)?                     # (fraction)
+                    (?:
+                          (?:[ \\t]*) Z
+                        | [-+] \\d{1,2} (?: :\\d{1,2})?
+                    )?                              # (time zone)
+                )
+              )
+            | (=)
+            | (<<)
+          )
+          (?:
+              (?=
+                    \\s* $
+                  | \\s+ \\#
+                  | \\s* : (\\s|$)
+                  | \\s* : [\\[\\]{},]
+                  | \\s* [\\[\\]{},]
+              )
+          )
+        '''
+        captures:
+          "1":
+            name: "constant.language.null.ansible-advanced"
+          "2":
+            name: "constant.language.boolean.ansible-advanced"
+          "3":
+            name: "constant.numeric.integer.ansible-advanced"
+          "4":
+            name: "constant.numeric.float.ansible-advanced"
+          "5":
+            name: "constant.other.timestamp.ansible-advanced"
+          "6":
+            name: "constant.language.value.ansible-advanced"
+          "7":
+            name: "constant.language.merge.ansible-advanced"
+      }
+    ]
+  "flow-scalar-plain-out-implicit-type":
+    patterns: [
+      {
+        match: '''
+          (?x)
+          (?x:
+                (null|Null|NULL|~)
+              | (y|Y|yes|Yes|YES|n|N|no|No|NO|true|True|TRUE|false|False|FALSE|on|On|ON|off|Off|OFF)
+              | (
+                  (?:
+                        [-+]? 0b [0-1_]+ # (base 2)
+                      | [-+]? 0  [0-7_]+ # (base 8)
+                      | [-+]? (?: 0|[1-9][0-9_]*) # (base 10)
+                      | [-+]? 0x [0-9a-fA-F_]+ # (base 16)
+                      | [-+]? [1-9] [0-9_]* (?: :[0-5]?[0-9])+ # (base 60)
+                  )
+                )
+              | (
+                  (?x:
+                        [-+]? (?: [0-9] [0-9_]*)? \\. [0-9.]* (?: [eE] [-+] [0-9]+)? # (base 10)
+                      | [-+]? [0-9] [0-9_]* (?: :[0-5]?[0-9])+ \\. [0-9_]* # (base 60)
+                      | [-+]? \\. (?: inf|Inf|INF) # (infinity)
+                      |       \\. (?: nan|NaN|NAN) # (not a number)
+                  )
+                )
+              | (
+                  (?x:
+                      \\d{4} - \\d{2} - \\d{2}           # (y-m-d)
+                    | \\d{4}                           # (year)
+                      - \\d{1,2}                       # (month)
+                      - \\d{1,2}                       # (day)
+                      (?: [Tt] | [ \\t]+) \\d{1,2}      # (hour)
+                      : \\d{2}                         # (minute)
+                      : \\d{2}                         # (second)
+                      (?: \\.\\d*)?                     # (fraction)
+                      (?:
+                            (?:[ \\t]*) Z
+                          | [-+] \\d{1,2} (?: :\\d{1,2})?
+                      )?                              # (time zone)
+                  )
+                )
+              | (=)
+              | (<<)
+          )
+          (?x:
+              (?=
+                    \\s* $
+                  | \\s+ \\#
+                  | \\s* : (\\s|$)
+              )
+          )
+        '''
+        captures:
+          "1":
+            name: "constant.language.null.ansible-advanced"
+          "2":
+            name: "constant.language.boolean.ansible-advanced"
+          "3":
+            name: "constant.numeric.integer.ansible-advanced"
+          "4":
+            name: "constant.numeric.float.ansible-advanced"
+          "5":
+            name: "constant.other.timestamp.ansible-advanced"
+          "6":
+            name: "constant.language.value.ansible-advanced"
+          "7":
+            name: "constant.language.merge.ansible-advanced"
+      }
+    ]
+  "flow-value":
+    patterns: [
+      {
+        name: "meta.flow-pair.value.ansible-advanced"
+        begin: "\\G(?![},\\]])"
+        end: "(?=[},\\]])"
+        patterns: [
+          {
+            include: "#flow-node"
+          }
+        ]
+      }
+    ]
+firstLineMatch: "^%YAML( ?1.\\d+)?"
+keyEquivalent: "^~Y"
