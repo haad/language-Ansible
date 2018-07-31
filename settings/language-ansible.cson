@@ -1,6 +1,14 @@
 ".source.ansible":
   editor:
     commentStart: "# "
+    foldEndPattern: "^\\s*$|^\\s*\\}|^\\s*\\]|^\\s*\\)"
+    increaseIndentPattern: '^\\s*.*(:|-) ?(&\\w+)?(\\{[^}"\']*|\\([^)"\']*)?$'
+    decreaseIndentPattern: "^\\s+\\}$"
+    tabType: "soft"
 ".source.ansible-advanced":
   editor:
     commentStart: "# "
+    foldEndPattern: "^\\s*$|^\\s*\\}|^\\s*\\]|^\\s*\\)"
+    increaseIndentPattern: '^\\s*.*(:|-) ?(&\\w+)?(\\{[^}"\']*|\\([^)"\']*)?$'
+    decreaseIndentPattern: "^\\s+\\}$"
+    tabType: "soft"
